@@ -1477,3 +1477,9 @@ The subplot barplots for Ron, Harry, and Hermione’s speech have been replaced 
 Let me know if you want further customization or additional metrics visualized!
 
 Made changes.
+
+**c-hoareau_onepoint**: Last thing I want to do, based in what was done in the notebook, write a comprehensive documentation in french in a md file describing how each stat was calculated, why the choices were made, their pros and their limitations
+
+**GitHub Copilot**: La documentation complète a été créée dans le fichier documentation_stats_harry_potter.md. Elle détaille, en français, la méthode de calcul de chaque statistique, les choix techniques, leurs avantages et leurs limites pour chaque tâche du notebook.
+
+Vous pouvez consulter ce fichier pour comprendre et justifier chaque étape de l’analyse. Si vous souhaitez ajouter des exemples ou approfondir certains points, dites-le-moi !

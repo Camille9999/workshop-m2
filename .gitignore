@@ -1,3 +1,5 @@
 .python-version
+*.keras
+
 N22/data
 N20/data

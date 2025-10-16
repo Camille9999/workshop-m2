@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Harry Potter Spell Detector</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        #result { margin-top: 20px; font-size: 1.2em; }
+        button { margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Harry Potter Spell Detector</h1>
+    <p>Record your voice and see which spell you cast!</p>
+    <button id="record">Record</button>
+    <button id="stop" disabled>Stop</button>
+    <audio id="audio" controls style="display:none;"></audio>
+    <button id="upload" disabled>Upload & Detect Spell</button>
+    <div id="result"></div>
+    <script>
+        let mediaRecorder;
+        let audioChunks = [];
+        let audioBlob;
+        const recordBtn = document.getElementById('record');
+        const stopBtn = document.getElementById('stop');
+        const uploadBtn = document.getElementById('upload');
+        const audioElem = document.getElementById('audio');
+        const resultDiv = document.getElementById('result');
+
+        recordBtn.onclick = async () => {
+            audioChunks = [];
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.start();
+            recordBtn.disabled = true;
+            stopBtn.disabled = false;
+            uploadBtn.disabled = true;
+            resultDiv.textContent = '';
+            mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+            mediaRecorder.onstop = () => {
+                audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                audioElem.src = URL.createObjectURL(audioBlob);
+                audioElem.style.display = 'block';
+                uploadBtn.disabled = false;
+            };
+        };
+
+        stopBtn.onclick = () => {
+            mediaRecorder.stop();
+            recordBtn.disabled = false;
+            stopBtn.disabled = true;
+        };
+
+        uploadBtn.onclick = async () => {
+            const formData = new FormData();
+            formData.append('file', audioBlob, 'audio.wav');
+            resultDiv.textContent = 'Transcribing and detecting spell...';
+            const response = await fetch('/transcribe', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+            resultDiv.innerHTML = `<b>Transcription:</b> ${data.transcription}<br><b>Detected Spell:</b> ${data.spell ? data.spell : 'None'}`;
+        };
+    </script>
+</body>
+</html>

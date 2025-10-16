@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+openai-whisper
+# torch and torchaudio are required for whisper
+torch
+ torchaudio
